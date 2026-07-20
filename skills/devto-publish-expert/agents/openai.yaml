@@ -1,0 +1,4 @@
+interface:
+  display_name: "DEV.to Publish Expert"
+  short_description: "Create standout DEV.to technical articles"
+  default_prompt: "Use $devto-publish-expert to research, draft, validate, and safely save a DEV.to article with exactly four tags."

@@ -1,0 +1,24 @@
+name: Skill improvement
+description: Propose a new skill or improve an existing workflow
+title: "[Skill]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What user request should the skill handle?
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current limitation
+      description: What currently fails or produces weak results?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or example
+      description: Provide a minimal prompt, output, or source that demonstrates the need.
