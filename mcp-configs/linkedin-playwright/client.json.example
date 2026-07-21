@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "linkedin-playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.69",
+        "--browser",
+        "chrome",
+        "--user-data-dir",
+        "C:\\PATH\\TO\\mcp-browser-profiles\\linkedin",
+        "--timeout-action",
+        "10000",
+        "--timeout-navigation",
+        "90000",
+        "--viewport-size",
+        "1440x1000"
+      ]
+    }
+  }
+}

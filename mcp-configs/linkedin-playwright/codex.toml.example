@@ -1,0 +1,19 @@
+# Merge this table into %USERPROFILE%\.codex\config.toml on Windows.
+# The profile directory must remain outside this repository.
+
+[mcp_servers.linkedin_playwright]
+command = "npx.cmd"
+args = [
+  "-y",
+  "@playwright/mcp@0.0.69",
+  "--browser",
+  "chrome",
+  "--user-data-dir",
+  "C:\\PATH\\TO\\mcp-browser-profiles\\linkedin",
+  "--timeout-action",
+  "10000",
+  "--timeout-navigation",
+  "90000",
+  "--viewport-size",
+  "1440x1000"
+]

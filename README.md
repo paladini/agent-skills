@@ -2,6 +2,8 @@
 
 Reusable Agent Skills for researching, creating, validating, and publishing high-quality technical work.
 
+The repository also stores sanitized [MCP server configurations](mcp-configs/) for restoring publishing workflows without committing real credentials or browser sessions.
+
 ## Skills
 
 ### DEV.to Publish Expert
@@ -42,6 +44,7 @@ Validate the skill structure with the Agent Skills validator, then run the bundl
 ```bash
 python path/to/skill-creator/scripts/quick_validate.py skills/devto-publish-expert
 python -m unittest discover -s skills/devto-publish-expert/scripts -p "test_*.py"
+python scripts/validate_mcp_configs.py
 ```
 
 ## Contributing

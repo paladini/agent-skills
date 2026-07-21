@@ -17,6 +17,8 @@ jobs:
           python-version: "3.12"
       - name: Test article validator
         run: python -m unittest discover -s skills/devto-publish-expert/scripts -p "test_*.py"
+      - name: Validate sanitized MCP configurations
+        run: python scripts/validate_mcp_configs.py
       - name: Check skill front matter
         run: |
           python - <<'PY'

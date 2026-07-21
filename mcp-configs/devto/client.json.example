@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "devto": {
+      "command": "C:\\PATH\\TO\\uv.exe",
+      "args": [
+        "--directory",
+        "C:\\PATH\\TO\\devto-mcp",
+        "run",
+        "server.py"
+      ],
+      "env": {
+        "DEV_TO_API_KEY": "REPLACE_WITH_LOCAL_SECRET"
+      }
+    }
+  }
+}
