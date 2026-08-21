@@ -254,6 +254,10 @@ def main() -> int:
     lines = [
         "# Harness Eval: Usefulness Agreement (Track C)",
         "",
+        "> **Diagnosis only** — harness files (`AGENTS.md`, rules, skills) were not edited.",
+        "> **Slim** = optional compress/delete if trap + fan-in PASS; **Keep-core** = do not slim; "
+        "**Hold** = undecided or fan-in blocked.",
+        "",
         f"> Run dir: `{run}`",
         f"> Trap gate: {'PASS' if trap_pass else 'FAIL'} (misses={len(misses)})",
         f"> Fan-in gate: {'PASS' if not fanin_blocked else 'BLOCKED'} "

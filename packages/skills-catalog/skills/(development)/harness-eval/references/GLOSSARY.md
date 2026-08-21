@@ -2,6 +2,19 @@
 
 Embedded at the top of `04-correctness.md`, `07-agreement.md`, and `10-usefulness-agreement.md`. Prefer verbs over jargon when talking to humans.
 
+## Say this first
+
+Paraphrase this box in the **user's language** at Step 0 and again at Step 11. Do not paste English jargon tables as the first thing they see. File bands stay `Ship` / `Review` / `Hold`; spoken aliases in parentheses.
+
+- **Harness** = the instructions the coding agent loads (`AGENTS.md`, rules, skills).
+- **This run is a diagnosis** = reports were written; harness files were not edited.
+- **BROKEN** = the map has a street that does not exist → fix the cite (or restore the file).
+- **Ship** (**safe to trim**) = both judges: this sentence is a cheap echo of the repo → optional delete.
+- **Review** (**keep**) = not obvious from a listing/manifest → leave it.
+- **Hold** (**undecided**) = no consensus → do not touch.
+- **Trap PASS** = planted fakes were scored right → you may trust Ship / Slim.
+- **Trap FAIL** = ignore Ship / Slim until plants are fixed and re-scored.
+
 ## The three tracks
 
 | Track | Question it answers | Certainty | Tokens | Main report |
@@ -10,7 +23,7 @@ Embedded at the top of `04-correctness.md`, `07-agreement.md`, and `10-usefulnes
 | **B — Redundancy** | Would an agent rediscover this cheaply without the harness text? | Medium (dual LLM + plants) | High (2 × claims) | `07-agreement.md` |
 | **C — Usefulness** | Does this surface change agent behavior, or is it theory / demo / overlap? | Lowest / model-sensitive | Highest (2 × surfaces) | `10-usefulness-agreement.md` |
 
-**Run gating:** After inventory → Q1 (optional docs) → Q2 (B/C budget) → A always → B/C if approved.
+**Run gating:** Step 0 briefing → inventory → Q1 (optional docs) → Q2 (B/C budget) → A always → B/C if approved.
 
 **Do not equate tracks:** Ship (B) ≠ Slim (C). Rediscoverable ≠ useless. Useful ≠ non-redundant.
 
@@ -20,7 +33,7 @@ Embedded at the top of `04-correctness.md`, `07-agreement.md`, and `10-usefulnes
 |------|---------|-------------------|
 | **Trap gate PASS** | Planted fake claims/surfaces were scored correctly — judges are calibrated | Trust Ship / Slim bands |
 | **Trap gate FAIL** | Judges failed discrimination plants | **Ignore** Ship / Slim; fix plants and re-run |
-| **Hold** | Judges disagreed, score missing, or both unclear | **Do nothing** until you decide manually |
+| **Hold** (spoken: **undecided**) | Judges disagreed, score missing, or both unclear | **Do nothing** until you decide manually |
 | **T0 / T1 / T2** | Always-on rules / skills / cited harness refs | Priority: edit T0 first (always loaded) |
 | **`--seed`** | Scope inventory to a starting file + one-hop related skills/refs | Only that subgraph was evaluated |
 | **Optional docs** | Cited project docs outside skill trees (not ADRs/RFCs) | Default off; approve types via `optional-docs-candidates.md` |
@@ -36,8 +49,8 @@ Embedded at the top of `04-correctness.md`, `07-agreement.md`, and `10-usefulnes
 
 | Term | Meaning | What you should do |
 |------|---------|-------------------|
-| **Ship** | Both judges: redundant **and** cheap to rediscover (cost ≤ 1) | **Safe to delete / trim** |
-| **Review** | Both judges: keep (not redundant) | **Leave alone** for redundancy reasons |
+| **Ship** (spoken: **safe to trim**) | Both judges: redundant **and** cheap to rediscover (cost ≤ 1) | **Safe to delete / trim** |
+| **Review** (spoken: **keep**) | Both judges: keep (not redundant) | **Leave alone** for redundancy reasons |
 | **REDUNDANT-CODE** | Echoes manifests/code layout | Candidate delete (only if Ship) |
 | **REDUNDANT-GENERAL** | Generic advice, no repo-specific signal | Candidate delete (only if Ship) |
 | **KEEP-POLICY / KEEP-CAVEAT / KEEP-ROUTING / KEEP-COMPRESSED** | Keep families | Leave alone |

@@ -4,32 +4,58 @@ description: "Evaluate a repo agent harness (AGENTS.md, rules, skills, skill ref
 license: CC-BY-4.0
 metadata:
   author: Tech Leads Club - github.com/tech-leads-club
-  version: 1.8.2
+  version: 1.8.3
 ---
 
 # Harness Eval
 
 Run a full, stack-agnostic harness evaluation and stop at reports. Do not auto-edit AGENTS.md or skills unless the user explicitly asks after reviewing Ship/Slim.
 
+## Step 0 — User briefing (HIGH PRIORITY)
+
+**Speak this in the user's language before inventory and before Q1/Q2.** Do not paste `PROTOCOL.md`. If the user looks lost after Q2 or after the report, repeat this briefing — do not dump jargon tables first. Paraphrase [GLOSSARY.md](references/GLOSSARY.md) **Say this first**.
+
+**What:** this audits *agent instructions* (`AGENTS.md`, rules, skills) — not application code, and not `harness-score` (or similar) maturity-point scans.
+
+**What happens:** reports land under `.harness-eval/runs/<id>/`. **Nothing in the harness is edited** unless the user later asks to apply.
+
+**Three tracks (user chooses B/C after a short inventory):**
+
+- **A — Correctness** (always runs, ~0 tokens): does this cited path or command exist?
+- **B — Redundancy** (optional, 2 judges × every claim): would an agent rediscover this *sentence* cheaply from the repo? Spoken: Ship = **safe to trim**, Review = **keep**, Hold = **undecided**.
+- **C — Usefulness** (optional, most expensive): if this *file* disappeared, would agent behavior change, or is it theory/demo?
+
+**Ship (B) is not Slim (C).** Obvious ≠ useless.
+
+Humans hear this section and Step 11. `PROTOCOL.md` is the operator spec.
+
 ## User questionnaires (HIGH PRIORITY)
 
 **Stop and ask before continuing.** Do not skip these gates. Do not silently include optional docs or spawn B/C judges.
 
-Order after inventory: **Q1 (if needed) → Q2 → then Track A** (A always runs) → B/C only if approved.
+Order: **Step 0 briefing → inventory → Q1 (if needed) → Q2 → Track A** (A always runs) → B/C only if approved.
 
 ### Q1 — Optional project docs (after inventory)
 
-When `optional-docs-candidates.md` lists optional types, ask before Q2 / Track A:
+When `optional-docs-candidates.md` lists optional types, ask before Q2 / Track A. **Spoken prompt** (user's language; keep type ids for the reply):
 
 ```markdown
-Inventory found cited project docs outside the agent skill trees.
+The audit always includes agent files (rules and skills).
 
-- **Always in scope:** skill-tree files (`.agents/skills`, `.cursor/skills`, `.claude/skills`)
-- **Always excluded:** ADRs / RFCs / decision-record trees (never scored as T2)
-- **Optional (default: omit):** see types/paths in `optional-docs-candidates.md`
+I found cited *project* docs that are not agent instructions (guides, workflows, package files, …).
+Include any of those in this run?
 
-Include any optional doc types or paths in this run?
-Reply with: `none` (default), type ids (e.g. `docs`), and/or specific paths.
+Reply with: `none` (default), type ids from the list below, and/or specific paths.
+```
+
+Then show the type/path table from `optional-docs-candidates.md` as an appendix. Do **not** lead with T2 / ADR / “decision-record trees”. (Those stay excluded in the scripts; you do not need to teach that unless asked.)
+
+Operator fallback if you must be exact:
+
+```markdown
+Always in scope: skill-tree files (`.agents/skills`, `.cursor/skills`, `.claude/skills`).
+Always excluded: ADRs / RFCs / decision-record trees.
+Optional (default: omit): see `optional-docs-candidates.md`.
 ```
 
 Re-run inventory with `--include-doc-type` / `--include-doc` only after the user answers. If no optional types, skip Q1.
@@ -38,21 +64,33 @@ Re-run inventory with `--include-doc-type` / `--include-doc` only after the user
 
 Ask **before** Track A so the user sets spend up front. Track **A always runs** next (deterministic, ~0 model tokens). B/C run only if approved.
 
-```markdown
-Choose eval scope for this run (before Track A).
+Fill **N** from the real-claim count in `claims.md` (exclude `P00x` plants when stating N; if unsure, say the inventory claim total). Surface count ≈ T0+T1+T2 markdown after extract (or say “after surfaces_extract” if C is chosen and extract has not run).
 
+**Spoken prompt** (user's language first, then the table):
+
+```markdown
+Track **A** always runs next: are cited paths/commands real? Script only, ~0 model tokens.
+
+Add **B** if you want “safe to trim because this sentence is obvious from the repo”
+(2 judges × N claims in this inventory — high tokens).
+
+Add **C** if you want “does this *file* change behavior, or is it theory/demo?”
+(2 judges × every whole file — highest tokens, most subjective).
+
+Reply with one of: `A only`, `B`, `C`, or `B+C`.
+
+Footnote: Ship (B) is not Slim (C). Obvious ≠ useless.
+```
+
+Then show the operator cost table:
+
+```markdown
 | Track | Question | Certainty | Token consumption |
 |-------|----------|-----------|-------------------|
 | **A — Correctness** | Cited path/command exists? | **Highest** — script only, no LLM. Prefers false negatives over false BROKEN. | **~0 model tokens** (always runs next) |
-| **B — Redundancy** | Would an agent rediscover this cheaply without the harness? | **Medium** — dual LLM + plants; Ship only if trap PASS and both agree. Disagree → Hold. Less model-sensitive than C. | **High** — 2 judges × every claim (~N in this inventory). Each may spot-check the repo. |
+| **B — Redundancy** | Would an agent rediscover this cheaply without the harness? | **Medium** — dual LLM + plants; Ship (safe to trim) only if trap PASS and both agree. Disagree → Hold (undecided). Less model-sensitive than C. | **High** — 2 judges × every claim (~N in this inventory). Each may spot-check the repo. |
 | **C — Usefulness** | Does this surface change behavior vs theory/demo/overlap? | **Lowest / most subjective** — dual LLM + plants + fan-in; **model-sensitive**. Slim/Mixed need gates; prefer second-model check before large deletes. | **Highest** — 2 judges × every surface (whole files; often dominates the run). |
-
-Notes: Ship (B) ≠ Slim (C). Rediscoverable ≠ useless. A always runs; B/C are optional.
-
-Reply with one of: `A only`, `B`, `C`, or `B+C`.
 ```
-
-Fill claim count from `claims.md` when known; surface count ≈ T0+T1+T2 markdown after extract (or say “after surfaces_extract” if not run yet).
 
 - **`A only`:** run Track A; present `04`; stop (no B/C judges).
 - **`B`:** Track A, then Steps 4–6.
@@ -65,9 +103,9 @@ If the user already requested B/C/`full eval` in the triggering message, treat a
 
 This skill is **self-contained**. Protocol, scripts, and judge prompts live under this skill directory (the folder that contains this `SKILL.md`). Resolve `SKILL_DIR` as that directory — never assume another install path.
 
-- Read [references/PROTOCOL.md](references/PROTOCOL.md) **completely** before the first run in a session (and again if scripts fail).
+- Read [references/PROTOCOL.md](references/PROTOCOL.md) **completely** before the first run in a session (and again if scripts fail). Do **not** read it aloud; humans hear Step 0 and Step 11.
 - Read [references/judge-prompts.md](references/judge-prompts.md) when spawning Track B or Track C judges.
-- Plain-language terms: [references/GLOSSARY.md](references/GLOSSARY.md) (also embedded at the top of `04` / `07` / `10` reports).
+- Plain-language terms: [references/GLOSSARY.md](references/GLOSSARY.md) — paraphrase **Say this first** at Step 0 and Step 11 (also embedded at the top of `04` / `07` / `10` reports).
 - Claim record shape: [references/claims.schema.json](references/claims.schema.json) (for tooling; agents do not need to load it every run).
 - Run scripts as `python3 "$SKILL_DIR/scripts/<name>.py" ...`.
 
@@ -107,6 +145,10 @@ Set `SKILL_DIR` to the directory containing this `SKILL.md`. Verify:
 
 If missing, the skill install is broken — stop.
 
+### Step 0: Brief the user
+
+Deliver the [Step 0 briefing](#step-0--user-briefing-high-priority) in the user's language. Then continue to inventory. Do not start Q1/Q2 until this was said.
+
 ### Step 2: Inventory + claim deck
 
 From the **target repo root**:
@@ -141,7 +183,7 @@ python3 "$SKILL_DIR/scripts/track_a_correctness.py" --root . --run-id "$RUN_ID"
 
 Expected: `04-correctness.md` (includes term definitions at top). Spot-check that `.agents/...` cites resolve (not `agents/...`).
 
-Summarize Track A (broken count + notable clusters). If Q2 was `A only`, stop. Otherwise continue to the approved B and/or C steps.
+If Q2 was `A only`, present via Step 11 (diagnosis frame, then Track A) and stop. Otherwise continue to the approved B and/or C steps; do not give the user a raw BROKEN dump as the first sentence.
 
 ### Step 4: Track B — Judge1
 
@@ -197,14 +239,14 @@ Expected: `10-usefulness-agreement.md` (Slim/Keep-core/Mixed/Hold + **What these
 
 ### Step 11: Present results
 
-Summarize from the agreement reports (each starts with term definitions):
+**Fixed spoken order** — do **not** open with a BROKEN/Ship table. Paraphrase GLOSSARY **Say this first** in the user's language. File bands stay `Ship` / `Review` / `Hold`; spoken aliases: **safe to trim** / **keep** / **undecided**.
 
-- Track A broken count → `04-correctness.md`
-- Track B trap + Ship/Review/Hold → `07-agreement.md`
-- Track C trap + fan-in + Slim/Keep-core/Mixed/Hold → `10-usefulness-agreement.md`
-- Call out `11-mixed-apply.md` when Mixed count > 0 (the only Mixed apply path)
-- Call out model ids used for Track C and that Slim is model-sensitive
-- Call out any **Slim fan-in blocked** rows (consumers outside seed may appear here)
+1. **Frame:** “This is a diagnosis. Nothing in `AGENTS.md` / rules / skills was changed. Reports: `.harness-eval/runs/<id>/`.”
+2. **What we ran:** e.g. “A + B (you skipped C).”
+3. **Track A** (`04-correctness.md`), one sentence then the list: “N cites are factually wrong (path or command missing).”
+4. **Track B** if run (`07-agreement.md`), one sentence then **Ship and Hold only** (Review as a count): “Trap PASS/FAIL. Ship = both judges say safe to trim (redundant). Review = keep. Hold = they disagreed — do not trim.” If trap **FAIL**, say **ignore Ship** *before* listing any Ship rows.
+5. **Track C** if run (`10-usefulness-agreement.md`): trap + fan-in + Slim / Keep-core / Mixed / Hold. Call out `11-mixed-apply.md` when Mixed count > 0. Call out Track C model ids and that Slim is model-sensitive. Call out **Slim fan-in blocked** rows.
+6. **Next actions** (offer these options; do not apply unless asked): fix BROKEN / apply Ship / run Track C / stop.
 
 Stop unless the user asks to apply Ship/Slim/Mixed. When applying:
 
@@ -217,7 +259,7 @@ Stop unless the user asks to apply Ship/Slim/Mixed. When applying:
 
 User says: "run harness eval on this repo"
 
-Actions: inventory → Q1 if needed → Q2 (B/C budget table) → Track A → if approved, Steps 4–11. Parallel B judges, then C judges. Present agreements (terms are in the files).
+Actions: Step 0 briefing (user's language) → inventory → Q1 if needed (plain spoken prompt) → Q2 (plain spoken prompt + cost table) → Track A → if approved, Steps 4–11. Parallel B judges, then C judges. Present via Step 11 template (diagnosis first, then findings).
 
 ### Example 2: Usefulness only (existing run)
 

@@ -1,6 +1,6 @@
 # Harness Evaluation Protocol
 
-> Platform- and codebase-agnostic. Version: 1.8.2
+> Platform- and codebase-agnostic. Version: 1.8.3
 > Scripts and this file live inside the `harness-eval` skill. Run outputs go to the target repo under `.harness-eval/runs/<id>/`.
 
 ## Purpose
@@ -13,7 +13,9 @@ Evaluate a repository’s **agent harness** for:
 
 Judgment is separate from remediation. Reports suggest; humans approve Slim/Ship edits.
 
-**Run gating (HIGH PRIORITY — skill opens with questionnaires):** After inventory: **Q1** (optional docs) → **Q2** (B/C budget, certainty + tokens) → **Track A always** → B/C only if approved. Do not spawn B/C judges until Q2 is answered (unless the user already requested those tracks — still show Q2 once).
+**Humans hear SKILL.md Step 0 and Step 11, not this file.** This file is the operator spec. If the user is lost, the agent repeats the Step 0 briefing — it does not dump this protocol.
+
+**Run gating (HIGH PRIORITY — skill opens with briefing + questionnaires):** Step 0 (user briefing) → inventory → **Q1** (optional docs) → **Q2** (B/C budget, certainty + tokens) → **Track A always** → B/C only if approved. Do not spawn B/C judges until Q2 is answered (unless the user already requested those tracks — still show Q2 once).
 
 ## Surface inventory (tiers)
 

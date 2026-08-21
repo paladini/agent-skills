@@ -498,6 +498,9 @@ def render_report(out_path: Path, inventory: dict, findings: list[Finding], ok_c
     lines = [
         "# Harness Eval: Correctness (Track A)",
         "",
+        "> **Diagnosis only** — harness files (`AGENTS.md`, rules, skills) were not edited.",
+        "> **BROKEN** = a cited path or command does not exist. Fix the cite or restore the file.",
+        "",
         f"> Generated: {datetime.now(timezone.utc).isoformat()}",
         "> Method: deterministic path/command checks (no README)",
         "",
