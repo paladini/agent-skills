@@ -6,6 +6,10 @@ The repository also stores sanitized [MCP server configurations](mcp-configs/) f
 
 ## Skills
 
+### OSS Pull Request Review
+
+[`oss-pull-request-review`](skills/oss-pull-request-review/) evaluates contributor pull requests for demonstrated need, fit with product direction, technical quality, and consistency across related languages, tools, and versions.
+
 ### DEV.to Publish Expert
 
 [`devto-publish-expert`](skills/devto-publish-expert/) helps an AI agent research and write specialist DEV Community articles, select exactly four relevant tags, validate technical quality, and use a draft-first publishing workflow.
@@ -19,32 +23,44 @@ Key guarantees:
 - drafts by default and explicit approval before publication;
 - correct handling of DEV temporary draft URLs.
 
-## Install
+## Keep Global Skills in Sync
 
-Copy a skill directory into the skills location used by your agent:
+Use this repository as the canonical source for your personal skills. Clone it once on each computer, pull before working, and link its skill folders into your agent's global skill directory. Editing a linked skill edits the tracked source in this clone.
 
-```bash
-git clone https://github.com/paladini/agent-skills.git
-cp -R agent-skills/skills/devto-publish-expert ~/.codex/skills/
-```
-
-On Windows PowerShell:
+On Windows PowerShell, the default links skills into the shared user-level `.agents/skills` directory used by Codex and compatible agents. Use `-Agent all` to also link Claude Code:
 
 ```powershell
-git clone https://github.com/paladini/agent-skills.git
-Copy-Item -Recurse agent-skills\skills\devto-publish-expert $env:USERPROFILE\.codex\skills\
+New-Item -ItemType Directory -Force "$HOME\Developer" | Out-Null
+git clone https://github.com/paladini/agent-skills.git "$HOME\Developer\agent-skills"
+Set-Location "$HOME\Developer\agent-skills"
+git pull
+.\scripts\link-global-skills.ps1 -Agent codex
 ```
 
-Restart the agent host after installation. Invoke the skill as `$devto-publish-expert` when explicit invocation is supported.
+On macOS or Linux (use the PowerShell script on Windows):
+
+```bash
+mkdir -p "$HOME/Developer"
+git clone https://github.com/paladini/agent-skills.git "$HOME/Developer/agent-skills"
+cd "$HOME/Developer/agent-skills"
+git pull
+./scripts/link-global-skills.sh --agent codex
+```
+
+Codex also scans the legacy `$CODEX_HOME/skills` location. Use `.agents/skills` as the shared source here; the installer preserves a same-named legacy skill and reports the conflict instead of creating a duplicate. See [Codex skill discovery roots](https://github.com/openai/codex/blob/main/codex-rs/ext/skills/src/host_roots.rs#L914-L935). Choose `all` to link the shared directory and Claude Code, or pass one or more custom skill roots with `-TargetRoot` (PowerShell) or `--target-root` (shell). Run the link command after adding a skill. When renaming or removing one, remove its old link manually after confirming it points into this repository; the installer does not prune links. To link just one skill, use `-SkillName <name>` or `--skill <name>`. Existing skill directories are never overwritten; resolve a reported conflict manually after inspecting and preserving its contents.
+
+After editing a skill, inspect `git diff`, then commit and push the change. On another computer, run `git pull`; existing links immediately use the updated files. Git does not upload local edits automatically, so push each change you want backed up on GitHub. Do not commit credentials, private prompts, or personal data.
 
 ## Validate
 
-Validate the skill structure with the Agent Skills validator, then run the bundled tests:
+Validate the skill structure with the Agent Skills validator, run the bundled tests, and check the global link scripts:
 
 ```bash
 python path/to/skill-creator/scripts/quick_validate.py skills/devto-publish-expert
 python -m unittest discover -s skills/devto-publish-expert/scripts -p "test_*.py"
 python scripts/validate_mcp_configs.py
+python path/to/skill-creator/scripts/quick_validate.py skills/oss-pull-request-review
+python -m unittest discover -s scripts -p "test_link_global_skills.py"
 ```
 
 ## Contributing
@@ -53,4 +69,4 @@ Contributions are welcome. Keep skills concise, evidence-led, safe around extern
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT license - see [LICENSE](LICENSE).
