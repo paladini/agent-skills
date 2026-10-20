@@ -23,9 +23,10 @@ Find and process actionable work in the current open-source repository by coordi
 
 ## Skill routing
 
-- Use `oss-pull-request-review` for external human PRs. It owns demonstrated need, product fit, ecosystem consistency, code review, tracking, and contributor-facing review. If the PR is accepted in principle and merge is being considered, use `pr-release-audit` for the separate merge and release gates.
-- Use `oss-github-issue-to-release` for an actionable open issue. It owns issue validation, planning, implementation, tests, documentation, PR creation, and its explicit plan, merge, and release gates. Never skip those gates because this skill is running a queue.
-- Use `pr-release-audit` for merge readiness of Dependabot PRs and for unresolved release or documentation gates after a positive contribution decision. Follow project-specific checks and current official security/vendor documentation.
+- Use `oss-pull-request-review` for external human PRs. It owns demonstrated need, product fit, ecosystem consistency, code review, tracking, and contributor-facing review. If the PR is accepted in principle and merge is being considered, use `oss-pr-merge-readiness` for pre-merge readiness. After an authorized merge, use `oss-release-and-deploy` for post-merge delivery and public verification; release authorization remains separate.
+- Use `oss-github-issue-to-pr` for an actionable open issue. It owns issue validation, planning, implementation, tests, documentation, PR creation, and its explicit plan, merge, and release gates. Its post-merge phases delegate to `oss-release-and-deploy` and the repository's release instructions. Never skip those gates because this skill is running a queue.
+- Use `oss-pr-merge-readiness` for merge readiness of Dependabot PRs and for unresolved release or documentation gates after a positive contribution decision. Follow project-specific checks and current official security/vendor documentation.
+- Use `oss-release-and-deploy` only after merge for automatic deployment checks or an authorized release. It follows repository-specific instructions and reports each public delivery surface separately.
 - If a companion skill is unavailable, continue only with work that can be done safely and accurately from repository guidance. Do not download or install skills automatically. State which part could not be completed.
 
 ## Run behavior and boundaries

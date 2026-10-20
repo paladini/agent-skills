@@ -1,9 +1,9 @@
 ---
-name: oss-github-issue-to-release
-description: Run an open-source GitHub issue from triage and validation through an approved plan, implementation, tests, documentation, pull request, CI, audit, and separately authorized merge or release. Use for issue-to-completion requests; use oss-pull-request-review for a contribution PR review that does not ask to implement a linked issue.
+name: oss-github-issue-to-pr
+description: Take an open-source GitHub issue from triage through validation, planning, implementation, tests, documentation, and a pull request, with explicit merge and release gates. Use when given an issue URL or asked to implement an issue; use oss-pull-request-review to assess a contributor PR and oss-release-and-deploy for post-merge delivery.
 ---
 
-# Open-source GitHub issue to release
+# Open-source GitHub issue to pull request
 
 Orchestrate a **repeatable pipeline** for community and maintainer issues. This
 skill is thin: it drives **phases**, **gates**, and a **persistent brief**; it
@@ -13,10 +13,10 @@ delegates deep work to existing skills and repo docs.
 
 | What | Path |
 |------|------|
-| This skill (global) | `~/.agents/skills/oss-github-issue-to-release/` |
+| This skill (global) | `~/.agents/skills/oss-github-issue-to-pr/` |
 | Playbooks and templates | `reference/` under this skill directory |
 | Per-issue state (working copy) | `<repo>/.agents/issues/<owner>-<repo>-<number>/` |
-| Repo-specific overrides | `<repo>/.agents/skills/oss-github-issue-to-release.repo.md` if present |
+| Repo-specific overrides | `<repo>/.agents/skills/oss-github-issue-to-pr.repo.md` if present |
 
 Read repo overrides **before** phase 5 (implement). Repos may gitignore
 `.agents/issues/`; the brief is for humans and agents, not necessarily shipped.
@@ -26,10 +26,10 @@ Read repo overrides **before** phase 5 (implement). Repos may gitignore
 Parse the issue from a URL or `owner/repo#N`.
 
 ```text
-oss-github-issue-to-release: https://github.com/org/repo/issues/42
+oss-github-issue-to-pr: https://github.com/org/repo/issues/42
 ```
 
-**Default behavior:** run the **full pipeline** (validate -> plan -> implement -> docs -> changeset -> PR -> CI -> audit -> merge when you approve -> release when you approve -> verification report). There is no separate mode to choose - one skill, end to end.
+**Default behavior:** run the issue workflow through validation, planning, implementation, docs, changeset, PR, CI, and pre-merge audit. Merge and release remain explicit gates; after an authorized merge, hand delivery and public verification to `oss-release-and-deploy`. This skill coordinates the issue-to-PR path and does not duplicate the post-merge delivery workflow.
 
 Pause only at **GATE-PLAN**, **GATE-MERGE**, and **GATE-RELEASE**, or when you say to stop (e.g. “only plan this issue”, “stop after the PR is open”).
 
@@ -38,7 +38,7 @@ Approving **GATE-PLAN** continues straight through the issue comment in the repo
 Resume without re-explaining:
 
 ```text
-Continue oss-github-issue-to-release owner/repo#42
+Continue oss-github-issue-to-pr owner/repo#42
 Approve GATE-PLAN
 ```
 
@@ -82,9 +82,9 @@ one-off “stop here” in the same request).
 | 10 | Review comments / Bugbot | - |
 | 11 | Pre-merge audit | **GATE-MERGE** (recommendation only) |
 | 12 | Merge | **User must explicitly request** |
-| 13 | Post-merge verification | - |
-| 14 | Release | **GATE-RELEASE** + repo release skill |
-| 15 | Public verification | report only |
+| 13 | Post-merge delivery verification | `oss-release-and-deploy` (read-only checks; release gate still applies) |
+| 14 | Release | **GATE-RELEASE** + `oss-release-and-deploy` + repo release skill |
+| 15 | Public verification | `oss-release-and-deploy` |
 | 16 | Consolidation report | - |
 
 Detailed phase steps: [reference/playbooks.md](reference/playbooks.md).
@@ -113,7 +113,7 @@ Use [reference/brief-template.md](reference/brief-template.md). Always record:
 |-------|-----|
 | 11 | Follow a repository audit skill if available; otherwise audit against repository policy and save `audit-pre-merge.md` |
 | 9-10 | `babysit`, `gh-fix-ci`, `gh-address-comments` when available and useful |
-| 14 | Repo skill e.g. `release` or `RELEASING.md` when present |
+| 13-15 | `oss-release-and-deploy` coordinates; follow the repo skill e.g. `release` or `RELEASING.md` for execution details |
 | Vendor paths / APIs | Current official vendor docs first, not memory |
 
 ## Classification router
