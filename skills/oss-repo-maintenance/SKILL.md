@@ -1,9 +1,9 @@
 ---
-name: oss-repository-steward
+name: oss-repo-maintenance
 description: Coordinate a repository-wide OSS work sweep across external human PRs, actionable open issues, and Dependabot. Use when asked to scan a repository for work, find the next maintenance task, or continue a backlog queue. Do not use for a one-off PR or issue review, or to set up only a recurring schedule; route those to the specialized skill or automation.
 ---
 
-# OSS Repository Steward
+# OSS Repository Maintenance
 
 Find and process actionable work in the current open-source repository by coordinating the specialized OSS review, issue-to-release, and release-audit skills. Work from evidence, preserve repository-owner work, and keep each item separate until its required gates are satisfied.
 

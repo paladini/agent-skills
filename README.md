@@ -1,30 +1,46 @@
 # Agent Skills
 
-Reusable Agent Skills for researching, creating, validating, and publishing high-quality technical work.
+A personal, version-controlled library of reusable skills for AI agents. The main direction is to make complete open-source repository maintenance possible through composable skills: an agent finds the next useful task, routes it to the right workflow, checks the work, and stops at the correct decision gates.
 
-The repository also stores sanitized [MCP server configurations](mcp-configs/) for restoring publishing workflows without committing real credentials or browser sessions.
+This repository also keeps separate workflows, such as technical publishing, and sanitized [MCP server configurations](mcp-configs/) for restoring selected integrations without committing credentials or browser sessions.
 
-## Skills
+## Agent workflows
 
-### OSS Repository Steward
+The terms describe different parts of the system:
 
-[`oss-repository-steward`](skills/oss-repository-steward/) coordinates a bounded repository sweep: eligible external human PRs, actionable open issues, then Dependabot alerts and PRs. It routes detailed work to the specialized skills below, leaves repository-owner and maintainer PRs alone, and reports gates and access gaps. It runs while invoked; recurring background scans require a separate automation.
+- A **workflow** is the outcome and process, such as maintaining an open-source repository.
+- An **orchestrator skill** selects the next task and routes it to a specialist skill.
+- A **specialist skill** provides focused instructions for one job, such as reviewing a contributor PR or taking an issue through implementation.
+- An **agent or runner** executes the workflow. It can be an interactive agent, a scheduled automation, CI, or another compatible system.
 
-### OSS GitHub Issue to Release
+The group is called a workflow rather than an agent: the agent is the executor, while the workflow is the coordinated set of skills and decisions. Skills run when invoked; recurring work needs a runner that can start them on a schedule.
 
-[`oss-github-issue-to-release`](skills/oss-github-issue-to-release/) runs an open-source issue through validation, planning, implementation, pull request, CI, audit, and separately approved merge or release.
+### Open-source repository maintenance
 
-### OSS Pull Request Review
+The goal is to maintain a repository from one high-level request, such as “find and work through the next repository task.” The orchestrator checks the backlog, leaves owner and maintainer PRs alone, and routes each candidate to a focused skill. The detailed [workflow roadmap](docs/open-source-maintenance-workflows.md) describes how to grow this into a dependable agent-driven maintenance system.
 
-[`oss-pull-request-review`](skills/oss-pull-request-review/) evaluates contributor pull requests for demonstrated need, fit with product direction, technical quality, and consistency across related languages, tools, and versions.
+| Skill | Role |
+| --- | --- |
+| [`oss-repo-maintenance`](skills/oss-repo-maintenance/) | Orchestrates a bounded sweep of external human PRs, actionable open issues, and Dependabot alerts or PRs. |
+| [`oss-pull-request-review`](skills/oss-pull-request-review/) | Evaluates a community contribution's need, product fit, technical quality, and consistency across related languages, tools, and versions. |
+| [`oss-github-issue-to-release`](skills/oss-github-issue-to-release/) | Takes an actionable issue through validation, planning, implementation, tests, documentation, PR, and separately authorized merge or release. |
+| [`pr-release-audit`](skills/pr-release-audit/) | Checks merge and release readiness, including current vendor contracts, documentation and site parity, release metadata, and contributor credit. |
 
-### PR and Release Audit
+```mermaid
+flowchart TD
+    request["User or automation request"] --> orchestrator["oss-repo-maintenance"]
+    orchestrator -->|"external human PR"| review["oss-pull-request-review"]
+    review -->|"accepted in principle; merge considered"| audit["pr-release-audit"]
+    orchestrator -->|"actionable open issue"| issue["oss-github-issue-to-release"]
+    issue --> audit
+    orchestrator -->|"Dependabot alert or PR"| audit
+```
 
-[`pr-release-audit`](skills/pr-release-audit/) complements OSS contribution review with deeper merge and release checks, including current vendor contracts, documentation and site parity, release metadata, and explicit contributor credit. Use it alongside `oss-pull-request-review` when an external contribution is a candidate for merge or changes release-facing files.
+The current skills support agent-run, bounded work. A continuously running or scheduled service is not part of this repository yet; the roadmap treats runner selection, permission scope, checkpointing, and scheduling as later implementation work.
 
-### DEV.to Publish Expert
+### Publishing and content
 
-[`devto-publish-expert`](skills/devto-publish-expert/) helps an AI agent research and write specialist DEV Community articles, select exactly four relevant tags, validate technical quality, and use a draft-first publishing workflow.
+[`devto-publish-expert`](skills/devto-publish-expert/) researches and writes specialist DEV Community articles, selects exactly four relevant tags, validates technical quality, and uses a draft-first publishing workflow.
 
 Key guarantees:
 
@@ -35,7 +51,7 @@ Key guarantees:
 - drafts by default and explicit approval before publication;
 - correct handling of DEV temporary draft URLs.
 
-## Keep Global Skills in Sync
+## Keep global skills in sync
 
 Use this repository as the canonical source for your personal skills. Clone it once on each computer, pull before working, and link its skill folders into your agent's global skill directory. Editing a linked skill edits the tracked source in this clone.
 
@@ -65,7 +81,7 @@ After editing a skill, inspect `git diff`, then commit and push the change. On a
 
 ## Validate
 
-Validate the skill structure with the Agent Skills validator, run the bundled tests, and check the global link scripts:
+Validate skill structure with the Agent Skills validator, run bundled tests, and check the global link scripts:
 
 ```bash
 python path/to/skill-creator/scripts/quick_validate.py skills/devto-publish-expert
@@ -73,12 +89,13 @@ python -m unittest discover -s skills/devto-publish-expert/scripts -p "test_*.py
 python scripts/validate_mcp_configs.py
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-github-issue-to-release
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-pull-request-review
+python path/to/skill-creator/scripts/quick_validate.py skills/oss-repo-maintenance
 python -m unittest discover -s scripts -p "test_link_global_skills.py"
 ```
 
 ## Contributing
 
-Contributions are welcome. Keep skills concise, evidence-led, safe around external side effects, and compatible with progressive disclosure. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Keep skills concise, evidence-led, safe around external side effects, and compatible with progressive disclosure. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
