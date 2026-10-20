@@ -14,6 +14,10 @@ The repository also stores sanitized [MCP server configurations](mcp-configs/) f
 
 [`oss-pull-request-review`](skills/oss-pull-request-review/) evaluates contributor pull requests for demonstrated need, fit with product direction, technical quality, and consistency across related languages, tools, and versions.
 
+### PR and Release Audit
+
+[`pr-release-audit`](skills/pr-release-audit/) complements OSS contribution review with deeper merge and release checks, including current vendor contracts, documentation and site parity, release metadata, and explicit contributor credit. Use it alongside `oss-pull-request-review` when an external contribution is a candidate for merge or changes release-facing files.
+
 ### DEV.to Publish Expert
 
 [`devto-publish-expert`](skills/devto-publish-expert/) helps an AI agent research and write specialist DEV Community articles, select exactly four relevant tags, validate technical quality, and use a draft-first publishing workflow.
