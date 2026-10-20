@@ -6,6 +6,10 @@ The repository also stores sanitized [MCP server configurations](mcp-configs/) f
 
 ## Skills
 
+### OSS Repository Steward
+
+[`oss-repository-steward`](skills/oss-repository-steward/) coordinates a bounded repository sweep: eligible external human PRs, actionable open issues, then Dependabot alerts and PRs. It routes detailed work to the specialized skills below, leaves repository-owner and maintainer PRs alone, and reports gates and access gaps. It runs while invoked; recurring background scans require a separate automation.
+
 ### OSS GitHub Issue to Release
 
 [`oss-github-issue-to-release`](skills/oss-github-issue-to-release/) runs an open-source issue through validation, planning, implementation, pull request, CI, audit, and separately approved merge or release.
