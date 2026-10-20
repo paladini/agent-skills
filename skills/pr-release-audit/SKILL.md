@@ -1,6 +1,6 @@
 ---
 name: pr-release-audit
-description: Audit pull requests and release readiness across correctness, tests, architecture, security, vendor documentation and version compatibility, repository docs, websites, changelogs, changesets, release notes, and explicit contributor attribution. Use when reviewing a PR, deciding whether it is merge-ready, adding support for a tool, or preparing a release.
+description: Audit merge and release readiness for a change whose need and scope have been accepted or assessed. Check correctness, tests, architecture, security, vendor compatibility, repository docs and websites, changesets, release notes, and contributor attribution. Use for merge-readiness or release work, not initial OSS product-fit triage.
 ---
 
 # PR and Release Audit
@@ -9,10 +9,13 @@ Perform an evidence-backed audit of the complete change lifecycle. Treat the
 repository instructions, current branch state, PR metadata, vendor contracts,
 CI, generated site, and release artifacts as separate evidence surfaces.
 
-For external open-source contributions, pair this audit with
-[`oss-pull-request-review`](../oss-pull-request-review/SKILL.md) when available.
-That skill decides whether the contribution meets a demonstrated need and fits
-the product direction; this one adds merge and release readiness gates.
+This audit assumes that the change's need and intended scope have been
+accepted or assessed. It does not decide whether an external contribution
+belongs in the product. If that decision is still open, use
+[`oss-pull-request-review`](../oss-pull-request-review/SKILL.md) first when
+available, then return here only if the contribution remains a candidate for
+merge. Do not repeat product-fit analysis or technical findings that the first
+review already established; focus on unresolved merge and release gates.
 
 ## Authority and safety
 
@@ -139,7 +142,7 @@ platform-specific limitations.
 
 Return a concise but complete report with:
 
-1. verdict: approve, approve with follow-up, request changes, or blocked;
+1. merge-readiness recommendation: ready, ready with follow-up, not ready, or blocked; this is an assessment, not authorization to submit an `APPROVE` review;
 2. findings ordered by severity, with file and line references when useful;
 3. structural, security, performance, and compatibility assessment;
 4. upstream documentation evidence and path mapping;
