@@ -1,5 +1,5 @@
 ---
-name: pr-release-audit
+name: oss-pr-merge-readiness
 description: Audit pre-merge readiness for a change whose need and scope have been accepted or assessed. Check correctness, tests, architecture, security, vendor compatibility, repository docs and websites, changesets, release notes, and contributor attribution. Use before merge, not for initial OSS product-fit triage or post-merge publication.
 ---
 

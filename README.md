@@ -23,17 +23,19 @@ The goal is to maintain a repository from one high-level request, such as “fin
 | --- | --- |
 | [`oss-repo-maintenance`](skills/oss-repo-maintenance/) | Orchestrates a bounded sweep of external human PRs, actionable open issues, and Dependabot alerts or PRs. |
 | [`oss-pull-request-review`](skills/oss-pull-request-review/) | Evaluates a community contribution's need, product fit, technical quality, and consistency across related languages, tools, and versions. |
-| [`oss-github-issue-to-release`](skills/oss-github-issue-to-release/) | Takes an actionable issue through validation, planning, implementation, tests, documentation, PR, and separately authorized merge or release. |
-| [`pr-release-audit`](skills/pr-release-audit/) | Checks pre-merge readiness, including current vendor contracts, documentation and site parity, release metadata, and contributor credit. |
+| [`oss-github-issue-to-pr`](skills/oss-github-issue-to-pr/) | Takes an actionable issue through validation, planning, implementation, tests, documentation, and a PR; merge and release stay gated, with post-merge delivery delegated to its specialist. |
+| [`oss-pr-merge-readiness`](skills/oss-pr-merge-readiness/) | Checks pre-merge readiness, including current vendor contracts, documentation and site parity, release metadata, and contributor credit. |
 | [`oss-release-and-deploy`](skills/oss-release-and-deploy/) | Coordinates an authorized post-merge release and deployment using the repository's own release instructions, then verifies each public surface. |
+
+These skills own separate steps. `oss-pull-request-review` decides whether an external contribution fits the product and reviews its substance. `oss-pr-merge-readiness` checks whether an accepted change has satisfied the gates to merge; it does not publish or deploy. `oss-github-issue-to-pr` takes a tracked issue through implementation and a PR, then hands post-merge delivery to `oss-release-and-deploy`. `oss-repo-maintenance` routes work among these specialists instead of repeating their analysis.
 
 ```mermaid
 flowchart TD
     request["User or automation request"] --> orchestrator["oss-repo-maintenance"]
     orchestrator -->|"external human PR"| review["oss-pull-request-review"]
-    review -->|"accepted in principle; merge considered"| audit["pr-release-audit (pre-merge)"]
+    review -->|"accepted in principle; merge considered"| audit["oss-pr-merge-readiness (pre-merge)"]
     audit -->|"authorized merge completed; release gate passed"| delivery["oss-release-and-deploy"]
-    orchestrator -->|"actionable open issue"| issue["oss-github-issue-to-release"]
+    orchestrator -->|"actionable open issue"| issue["oss-github-issue-to-pr"]
     issue --> audit
     issue -->|"after merge; release gate passed"| delivery
     orchestrator -->|"Dependabot alert or PR"| audit
@@ -90,7 +92,7 @@ Validate skill structure with the Agent Skills validator, run bundled tests, and
 python path/to/skill-creator/scripts/quick_validate.py skills/devto-publish-expert
 python -m unittest discover -s skills/devto-publish-expert/scripts -p "test_*.py"
 python scripts/validate_mcp_configs.py
-python path/to/skill-creator/scripts/quick_validate.py skills/oss-github-issue-to-release
+python path/to/skill-creator/scripts/quick_validate.py skills/oss-github-issue-to-pr
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-pull-request-review
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-repo-maintenance
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-release-and-deploy

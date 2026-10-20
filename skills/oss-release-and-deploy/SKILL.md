@@ -34,6 +34,6 @@ Complete the delivery lifecycle after a change is merged. This skill coordinates
 
 ## Handoffs
 
-- `pr-release-audit` owns pre-merge readiness. Return there only if a merge blocker remains.
+- `oss-pr-merge-readiness` owns pre-merge readiness. Return there only if a merge blocker remains.
 - `oss-pull-request-review` owns external contribution need, product fit, technical review, and contributor feedback.
-- `oss-github-issue-to-release` owns issue planning and implementation. It may delegate its post-merge phases here to avoid duplicating delivery checks.
+- `oss-github-issue-to-pr` owns issue planning and implementation. It may delegate its post-merge phases here to avoid duplicating delivery checks.
