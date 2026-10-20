@@ -24,15 +24,18 @@ The goal is to maintain a repository from one high-level request, such as “fin
 | [`oss-repo-maintenance`](skills/oss-repo-maintenance/) | Orchestrates a bounded sweep of external human PRs, actionable open issues, and Dependabot alerts or PRs. |
 | [`oss-pull-request-review`](skills/oss-pull-request-review/) | Evaluates a community contribution's need, product fit, technical quality, and consistency across related languages, tools, and versions. |
 | [`oss-github-issue-to-release`](skills/oss-github-issue-to-release/) | Takes an actionable issue through validation, planning, implementation, tests, documentation, PR, and separately authorized merge or release. |
-| [`pr-release-audit`](skills/pr-release-audit/) | Checks merge and release readiness, including current vendor contracts, documentation and site parity, release metadata, and contributor credit. |
+| [`pr-release-audit`](skills/pr-release-audit/) | Checks pre-merge readiness, including current vendor contracts, documentation and site parity, release metadata, and contributor credit. |
+| [`oss-release-and-deploy`](skills/oss-release-and-deploy/) | Coordinates an authorized post-merge release and deployment using the repository's own release instructions, then verifies each public surface. |
 
 ```mermaid
 flowchart TD
     request["User or automation request"] --> orchestrator["oss-repo-maintenance"]
     orchestrator -->|"external human PR"| review["oss-pull-request-review"]
-    review -->|"accepted in principle; merge considered"| audit["pr-release-audit"]
+    review -->|"accepted in principle; merge considered"| audit["pr-release-audit (pre-merge)"]
+    audit -->|"authorized merge completed; release gate passed"| delivery["oss-release-and-deploy"]
     orchestrator -->|"actionable open issue"| issue["oss-github-issue-to-release"]
     issue --> audit
+    issue -->|"after merge; release gate passed"| delivery
     orchestrator -->|"Dependabot alert or PR"| audit
 ```
 
@@ -90,6 +93,7 @@ python scripts/validate_mcp_configs.py
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-github-issue-to-release
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-pull-request-review
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-repo-maintenance
+python path/to/skill-creator/scripts/quick_validate.py skills/oss-release-and-deploy
 python -m unittest discover -s scripts -p "test_link_global_skills.py"
 ```
 

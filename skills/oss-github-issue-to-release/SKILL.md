@@ -82,9 +82,9 @@ one-off “stop here” in the same request).
 | 10 | Review comments / Bugbot | - |
 | 11 | Pre-merge audit | **GATE-MERGE** (recommendation only) |
 | 12 | Merge | **User must explicitly request** |
-| 13 | Post-merge verification | - |
-| 14 | Release | **GATE-RELEASE** + repo release skill |
-| 15 | Public verification | report only |
+| 13 | Post-merge delivery verification | `oss-release-and-deploy` (read-only checks; release gate still applies) |
+| 14 | Release | **GATE-RELEASE** + `oss-release-and-deploy` + repo release skill |
+| 15 | Public verification | `oss-release-and-deploy` |
 | 16 | Consolidation report | - |
 
 Detailed phase steps: [reference/playbooks.md](reference/playbooks.md).
@@ -113,7 +113,7 @@ Use [reference/brief-template.md](reference/brief-template.md). Always record:
 |-------|-----|
 | 11 | Follow a repository audit skill if available; otherwise audit against repository policy and save `audit-pre-merge.md` |
 | 9-10 | `babysit`, `gh-fix-ci`, `gh-address-comments` when available and useful |
-| 14 | Repo skill e.g. `release` or `RELEASING.md` when present |
+| 13-15 | `oss-release-and-deploy` coordinates; follow the repo skill e.g. `release` or `RELEASING.md` for execution details |
 | Vendor paths / APIs | Current official vendor docs first, not memory |
 
 ## Classification router

@@ -92,11 +92,11 @@ Confirm issue closed via linkage; main CI; no accidental amend of release commit
 
 ## Phase 14 - Release
 
-After merge, when **GATE-RELEASE** is approved: follow repo release skill / `RELEASING.md`. Never publish without explicit authorization.
+After merge, use `oss-release-and-deploy` for read-only deployment checks and release coordination. When **GATE-RELEASE** is approved, follow the repo release skill / `RELEASING.md` through that coordinator. Never publish without explicit authorization. A release-preparation PR has its own **GATE-MERGE**; approval to release the original change does not approve merging that second PR.
 
 ## Phase 15 - Public verification
 
-Check npm/GitHub Release/Pages/Marketplace as applicable; report URLs and versions.
+Use `oss-release-and-deploy` to check each applicable registry, GitHub Release, tag, marketplace listing, and deployed site independently; report URLs, versions, and any remaining manual steps.
 
 ## Phase 16 - Consolidation
 

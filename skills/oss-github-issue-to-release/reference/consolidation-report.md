@@ -41,9 +41,20 @@ recommending merge or release.
 - Release prepare: not started | in progress | done
 - Public registries/site: not verified | verified - ...
 
+### Delivery state
+
+| Surface | State | Evidence / URL |
+|---------|-------|---------------|
+| Source PR merge | pending | |
+| Release | not applicable | |
+| Registry / marketplace artifacts | not applicable | |
+| Documentation deployment | not applicable | |
+| Public verification | pending | |
+
 ### Your explicit OK still needed
 
 - [ ] Merge
+- [ ] Merge release-preparation PR (if required; separate approval)
 - [ ] Release
 - [ ] None - user asked to stop before merge/release
 

@@ -25,7 +25,8 @@ The personal skill repository now groups the OSS workflow under **Agent workflow
 - `oss-repo-maintenance` discovers work and routes a bounded queue.
 - `oss-pull-request-review` assesses external PR need, product fit, implementation, and cross-ecosystem consistency.
 - `oss-github-issue-to-release` runs actionable issues through validation and a gated implementation lifecycle.
-- `pr-release-audit` checks merge and release readiness.
+- `pr-release-audit` checks pre-merge readiness.
+- `oss-release-and-deploy` coordinates authorized post-merge release and deployment follow-through.
 
 The repository also contains a separate DEV.to publishing workflow and sanitized MCP configuration examples. The README explains the groups and current boundaries.
 
@@ -90,9 +91,9 @@ Specify how a run resumes after a user gate, process restart, or changed remote 
 
 ### Phase 5 - Controlled execution
 
-Expand from inventory to one approved work item at a time. Use clean or isolated worktrees where appropriate, inspect existing changes before edits, run repository-required checks, and wait for required remote CI before the next security merge. Prepare public text in the repository's language and follow repository attribution rules.
+Expand from inventory to one approved work item at a time. Use clean or isolated worktrees where appropriate, inspect existing changes before edits, run repository-required checks, and wait for required remote CI before the next security merge. Keep `pr-release-audit` focused on pre-merge readiness. After an authorized merge, route release and deployment follow-through to `oss-release-and-deploy`, which reads the repository's own release policy, monitors delivery, and verifies each public surface. The issue workflow should use the same post-merge handoff rather than duplicate it. Prepare public text in the repository's language and follow repository attribution rules.
 
-**Exit criteria:** each local change has a reproducible validation report; public actions match the current request; merge and release remain distinct gates; unrelated files remain untouched.
+**Exit criteria:** each local change has a reproducible validation report; public actions match the current request; pre-merge audit, merge, release, deployment, and public verification are reported as separate states; unrelated files remain untouched.
 
 ### Phase 6 - Add an automation runner
 

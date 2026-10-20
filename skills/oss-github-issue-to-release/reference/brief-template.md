@@ -56,6 +56,16 @@
 |---------|--------|
 | | |
 
+## Post-merge delivery
+
+| Surface | State | Evidence / URL |
+|---------|-------|---------------|
+| Source PR merge | pending | |
+| Release | not applicable | |
+| Registry / marketplace artifacts | not applicable | |
+| Documentation deployment | not applicable | |
+| Public verification | pending | |
+
 ## Gate log
 
 | Gate | Status | Notes |
@@ -71,6 +81,7 @@
 
 - Plan snapshot: `plan.md`
 - Pre-merge audit: `audit-pre-merge.md`
+- Post-merge delivery report: `delivery-report.md`
 
 ## Current verdict
 

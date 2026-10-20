@@ -1,13 +1,15 @@
 ---
 name: pr-release-audit
-description: Audit merge and release readiness for a change whose need and scope have been accepted or assessed. Check correctness, tests, architecture, security, vendor compatibility, repository docs and websites, changesets, release notes, and contributor attribution. Use for merge-readiness or release work, not initial OSS product-fit triage.
+description: Audit pre-merge readiness for a change whose need and scope have been accepted or assessed. Check correctness, tests, architecture, security, vendor compatibility, repository docs and websites, changesets, release notes, and contributor attribution. Use before merge, not for initial OSS product-fit triage or post-merge publication.
 ---
 
-# PR and Release Audit
+# PR Merge Readiness Audit
 
-Perform an evidence-backed audit of the complete change lifecycle. Treat the
-repository instructions, current branch state, PR metadata, vendor contracts,
-CI, generated site, and release artifacts as separate evidence surfaces.
+Perform an evidence-backed audit of merge readiness. Treat repository
+instructions, current branch state, PR metadata, vendor contracts, CI,
+generated site, and release metadata as separate evidence surfaces. This skill
+ends at the merge decision; post-merge release and deployment follow-through
+belongs to `oss-release-and-deploy` when available.
 
 This audit assumes that the change's need and intended scope have been
 accepted or assessed. It does not decide whether an external contribution
@@ -23,7 +25,7 @@ review already established; focus on unresolved merge and release gates.
   rules before changing files.
 - Preserve unrelated worktree changes. Inspect status before and after edits.
 - Review and diagnostics are read-only by default. Implement requested fixes,
-  documentation, or release artifacts when they are in scope.
+  documentation, or pre-merge release metadata when they are in scope.
 - Never merge, tag, publish packages, create a GitHub release, close issues, or
   send external messages unless the user explicitly authorizes that action.
 - Do not claim that a change is released, deployed, public, or complete until
@@ -90,16 +92,17 @@ the same change boundary:
 
 State precisely what “supported” means. Separate environment/filesystem
 compatibility from detection, scoring, feature support, and runtime guarantees.
-Run the repository's documentation build and link checks, then verify the
-deployed site if deployment is in scope.
+Run the repository's documentation build and link checks before merge. If the
+current public site is relevant evidence, inspect it, but verify a deployment
+caused by this change after merge with `oss-release-and-deploy`.
 
-## 5. Release notes and contributor credit are mandatory gates
+## 5. Pre-merge release metadata and contributor credit are mandatory gates
 
 Do not rely on commit metadata alone. `Co-authored-by` is useful Git history,
 but it does not guarantee that a changeset, changelog, or GitHub release note
 will credit the contributor.
 
-Before merge or release:
+Before recommending merge:
 
 1. Identify the PR author and every real contributor from PR metadata, commits,
    review history, linked issues, and explicit user-provided attribution.
@@ -114,12 +117,13 @@ Before merge or release:
    belongs in the release. Do not credit the reviewer or merge author as the
    contributor unless they actually contributed. Follow repository guidance
    when the repository owner or maintainer is also the reporter or author.
-6. Verify the rendered/generated release notes after release. Check the
-   changelog, GitHub release, package metadata, and PR/issue communication when
-   those surfaces are part of the requested release workflow.
+6. Verify the source release artifact and preview rendered/generated notes
+   when the repository provides a local preview. Public release notes,
+   registries, tags, marketplace listings, and deployed sites are verified
+   after merge by `oss-release-and-deploy`.
 7. If a PR is already merged and its pending release artifact lacks credit,
-   report the gap and prepare a follow-up change only with user authorization;
-   do not rewrite history or fabricate attribution.
+   report the gap and route it to `oss-release-and-deploy`; do not change
+   published history or prepare a follow-up change from this pre-merge audit.
 
 ## 6. Validate proportionally
 
@@ -133,7 +137,10 @@ gates include:
 - documentation build and link validation;
 - benchmark before and after scanner hot-path changes;
 - CI on the supported operating systems and runtime versions;
-- post-merge deployment and public URL verification when applicable.
+- release preparation and version-surface checks required before merge.
+
+Post-merge publication and deployment checks are outside this audit. Route
+them to `oss-release-and-deploy` after the applicable release authorization.
 
 Report warnings separately from failures, including pre-existing warnings and
 platform-specific limitations.
@@ -149,7 +156,8 @@ Return a concise but complete report with:
 5. documentation/site surfaces changed or still missing;
 6. tests and checks run, including their exact outcome;
 7. release-note/changeset status and explicit contributor-credit status;
-8. merge, release, deployment, and public-verification state separately;
+8. merge readiness and release-metadata readiness; mark publication and
+   deployment as pending, not applicable, or outside this pre-merge audit;
 9. remaining risks and the smallest recommended next action.
 
 Never summarize “green CI” as “released.” Keep local, merged, deployed, and
