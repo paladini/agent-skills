@@ -6,6 +6,10 @@ The repository also stores sanitized [MCP server configurations](mcp-configs/) f
 
 ## Skills
 
+### OSS GitHub Issue to Release
+
+[`oss-github-issue-to-release`](skills/oss-github-issue-to-release/) runs an open-source issue through validation, planning, implementation, pull request, CI, audit, and separately approved merge or release.
+
 ### OSS Pull Request Review
 
 [`oss-pull-request-review`](skills/oss-pull-request-review/) evaluates contributor pull requests for demonstrated need, fit with product direction, technical quality, and consistency across related languages, tools, and versions.
@@ -59,6 +63,7 @@ Validate the skill structure with the Agent Skills validator, run the bundled te
 python path/to/skill-creator/scripts/quick_validate.py skills/devto-publish-expert
 python -m unittest discover -s skills/devto-publish-expert/scripts -p "test_*.py"
 python scripts/validate_mcp_configs.py
+python path/to/skill-creator/scripts/quick_validate.py skills/oss-github-issue-to-release
 python path/to/skill-creator/scripts/quick_validate.py skills/oss-pull-request-review
 python -m unittest discover -s scripts -p "test_link_global_skills.py"
 ```
