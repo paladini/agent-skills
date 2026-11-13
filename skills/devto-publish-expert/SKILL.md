@@ -58,6 +58,16 @@ Before creating a draft, verify:
 
 ## Publication boundary
 
+When a publishing workflow maintains a local history, preserve its publication
+records and use explicit UTF-8 for every read and write. Validate the existing
+history and the complete temporary replacement before an atomic write; stop and
+report suspiciously oversized or corrupted state instead of copying or rewriting
+it. Keep backups bounded and verified, and exclude article bodies and full tool
+responses from the history. Apply the workflow's repository rotation rules after
+reconciling with available public articles.
+For this skill's JSON history manager and rotation check, see
+[publication-history.md](references/publication-history.md).
+
 Treat draft creation as reversible and public publication as an external side effect.
 
 - Default to `published: false`.
